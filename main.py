@@ -1,16 +1,27 @@
 import requests
+import json
 import import_ipynb
 import Pokedex as pd
 import sys
-from flask import Flask, render_template
-import os
 
 pokedex = pd.getPokemon()
 typeList = pd.getTypeList()
+randomTeam = pd.randomTeam()
+randomTeam.sort()
 
-typeAtt = input('Enter Type:').lower()
 
-print(pd.score(typeAtt, pokedex['gengar']))
+myTeam = pd.teamBuilder()
+
+typeAtt = input('Enter Type:')
+for i in myTeam:
+    print(i)
+    print(pd.score(typeAtt,pokedex[i]))
+    
+typeAtt = input('Enter Type:')
+
+for i in randomTeam:
+    print(i)
+    print(pd.score(typeAtt,pokedex[i]))
 
 while True:
     try:
@@ -34,16 +45,3 @@ for i in pd.getType(cur):
     for types in typeList:
         print('{:<10s}{:>4.1f}'.format(types, (pd.getDef(i)[x])))
         x+=1
-
-app = Flask(__name__)
-@app.route('/')
-def homepage():
-    return render_template(
-        "index.html"
-    )
-    
-app.run(
-    port=int(os.getenv('PORT', 8080)),
-    host=os.getenv('IP', '0.0.0.0'),
-    debug=True
-)
